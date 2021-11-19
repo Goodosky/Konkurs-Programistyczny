@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { Boat } from "./boat";
 
 export function startBoatGame() {
   // Scene
@@ -32,6 +33,10 @@ export function startBoatGame() {
   // Grid
   var grid = new THREE.GridHelper(30, 30);
   scene.add(grid);
+
+  // Render Boat
+  const boat = new Boat();
+  boat.loadModel(scene);
 
   // Animate
   function animate() {
