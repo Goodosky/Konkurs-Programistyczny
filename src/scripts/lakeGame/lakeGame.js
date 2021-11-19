@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Boat } from "./boat";
+import { EventHandler } from "./eventHandler";
 
 export function startBoatGame() {
   // Scene
@@ -45,21 +46,8 @@ export function startBoatGame() {
   const boat = new Boat();
   boat.loadModel(scene, coliders);
 
-  // Event handlers
-  document.addEventListener("keydown", (e) => {
-    if (e.key == "ArrowUp") {
-      boat.moveFoward();
-    }
-    if (e.key == "ArrowRight") {
-      boat.turnRight();
-    }
-  });
-
-  document.addEventListener("keyup", (e) => {
-    if (e.key == "ArrowUp") {
-      boat.moveStop();
-    }
-  });
+  // Add event handlers
+  new EventHandler(boat);
 
   // Animate
   function animate() {
