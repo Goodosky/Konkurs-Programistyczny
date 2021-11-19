@@ -38,6 +38,22 @@ export function startBoatGame() {
   const boat = new Boat();
   boat.loadModel(scene);
 
+  // Event handlers
+  document.addEventListener("keydown", (e) => {
+    if (e.key == "ArrowUp") {
+      boat.moveFoward();
+    }
+    if (e.key == "ArrowRight") {
+      boat.turnRight();
+    }
+  });
+
+  document.addEventListener("keyup", (e) => {
+    if (e.key == "ArrowUp") {
+      boat.moveStop();
+    }
+  });
+
   // Animate
   function animate() {
     requestAnimationFrame(animate);

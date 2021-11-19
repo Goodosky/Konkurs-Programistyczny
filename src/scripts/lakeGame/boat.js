@@ -5,6 +5,8 @@ export class Boat {
   constructor() {
     this._boat = undefined;
     this._modelLoaded = false;
+    this._speed = 0;
+    this._maxSpeed = 0.03;
   }
 
   loadModel(scene) {
@@ -19,5 +21,42 @@ export class Boat {
         this._modelLoaded = true;
       });
     });
+  }
+
+  moveFoward() {
+    if (this._modelLoaded && this._speed == 0) {
+      clearInterval(this._interval);
+      this._interval = setInterval(() => {
+        //   Increase speed
+        if (this._speed < this._maxSpeed) {
+          this._speed += 0.0004;
+        }
+
+        // Move boat
+        this._boat.position.z += this._speed;
+
+        console.log("this._speed:", this._speed);
+      }, 10);
+    }
+  }
+
+  moveStop() {
+    // Clear interval from moveFoward
+    clearInterval(this._interval);
+
+    // Crete new interval to slow down
+    this._interval = setInterval(() => {
+      // Slow down
+      if (this._speed > 0.001) {
+        this._speed -= 0.0006;
+      } else {
+        this._speed = 0;
+        clearInterval(this._interval);
+      }
+      // Move boat
+      this._boat.position.z += this._speed;
+
+      console.log("this._speed:", this._speed);
+    }, 10);
   }
 }
