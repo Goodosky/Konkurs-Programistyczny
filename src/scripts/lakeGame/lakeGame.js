@@ -34,9 +34,16 @@ export function startBoatGame() {
   var grid = new THREE.GridHelper(30, 30);
   scene.add(grid);
 
+  // Render Colliders
+  var collider = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshNormalMaterial({}));
+  collider.position.z = 5;
+  scene.add(collider);
+
+  const coliders = [collider];
+
   // Render Boat
   const boat = new Boat();
-  boat.loadModel(scene);
+  boat.loadModel(scene, coliders);
 
   // Event handlers
   document.addEventListener("keydown", (e) => {
