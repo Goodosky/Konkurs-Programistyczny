@@ -14,10 +14,10 @@ export class EventHandler {
       } else if (e.key == "ArrowDown") {
         boat.moveBoat("back");
         isMovement.back = true;
-      } else if (e.key == "ArrowRight" && !isMovement.right && (isMovement.foward || isMovement.back)) {
+      } else if (e.key == "ArrowRight" && !isMovement.right && !isMovement.left) {
         boat.rotateBoat("right");
         isMovement.right = true;
-      } else if (e.key == "ArrowLeft" && !isMovement.left && (isMovement.foward || isMovement.back)) {
+      } else if (e.key == "ArrowLeft" && !isMovement.right && !isMovement.left) {
         boat.rotateBoat("left");
         isMovement.left = true;
       }
@@ -28,10 +28,10 @@ export class EventHandler {
         boat.moveStop();
         isMovement.foward = false;
         isMovement.back = false;
-      } else if (e.key == "ArrowRight") {
+      } else if (e.key == "ArrowRight" && isMovement.right) {
         boat.rotationStop();
         isMovement.right = false;
-      } else if (e.key == "ArrowLeft") {
+      } else if (e.key == "ArrowLeft" && isMovement.left) {
         boat.rotationStop();
         isMovement.left = false;
       }
