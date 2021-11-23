@@ -21,10 +21,10 @@ export function startBoatGame() {
   controls.target.set(0, 0, 0);
 
   // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambientLight);
 
-  const sunLight = new THREE.DirectionalLight(0xfdfaf1, 1.5);
+  const sunLight = new THREE.DirectionalLight(0xfdfaf1, 1);
   sunLight.position.set(15, 1, 0);
   sunLight.castShadow = true;
   scene.add(sunLight);

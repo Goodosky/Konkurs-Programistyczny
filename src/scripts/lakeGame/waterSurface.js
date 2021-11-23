@@ -4,7 +4,7 @@ export class WaterSurface {
   constructor(scene) {
     this.waterSurface = new THREE.Mesh(
       new THREE.PlaneGeometry(20, 20, 40, 40),
-      new THREE.MeshPhongMaterial({ color: 0x44ddff, side: THREE.DoubleSide })
+      new THREE.MeshPhongMaterial({ color: 0x44ddff, side: THREE.BackSide, shininess: 250 })
     );
     this.waterSurface.rotation.x = Math.PI / 2;
     this.waterSurface.position.y = -0.02;
