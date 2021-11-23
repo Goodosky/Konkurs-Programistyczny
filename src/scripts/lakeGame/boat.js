@@ -17,6 +17,7 @@ export class Boat {
       const objLoader = new OBJLoader();
       objLoader.setMaterials(mtl);
       objLoader.load("/models/BoatWSail.obj", (boat) => {
+        boat.position.y = 0.05;
         scene.add(boat);
         this._boat = boat;
         this._collisionManager = new CollisionManager(boat, coliders);

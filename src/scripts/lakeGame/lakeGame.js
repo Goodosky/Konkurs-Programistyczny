@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Boat } from "./boat";
 import { EventHandler } from "./eventHandler";
+import { WaterSurface } from "./waterSurface";
 
 export function startBoatGame() {
   // Scene
@@ -9,22 +10,23 @@ export function startBoatGame() {
 
   // Renderer
   const canvas = document.querySelector("#gameCanvasBoard");
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 10, 20);
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 1, 20);
 
   const controls = new OrbitControls(camera, canvas);
   controls.target.set(0, 0, 0);
 
   // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
   scene.add(ambientLight);
 
-  const sunLight = new THREE.DirectionalLight(0xffffff, 1);
-  sunLight.position.set(5, 10, 2);
+  const sunLight = new THREE.DirectionalLight(0xfdfaf1, 1.5);
+  sunLight.position.set(15, 1, 0);
+  sunLight.castShadow = true;
   scene.add(sunLight);
 
   // Axis
@@ -32,13 +34,20 @@ export function startBoatGame() {
   scene.add(axis);
 
   // Grid
-  var grid = new THREE.GridHelper(30, 30);
+  const grid = new THREE.GridHelper(30, 30);
   scene.add(grid);
 
+  // Water surface
+  const waterSurface = new WaterSurface(scene);
+
   // Render Colliders
-  var collider = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshNormalMaterial({}));
-  collider.position.z = 5;
+  const collider = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshNormalMaterial({}));
+  collider.position.set(15, 1, 0);
   scene.add(collider);
+
+  const collider2 = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshPhongMaterial({ color: 0x00ffff }));
+  collider2.position.set(5, 5, 0);
+  scene.add(collider2);
 
   const coliders = [collider];
 
@@ -51,9 +60,10 @@ export function startBoatGame() {
 
   // Animate
   function animate() {
-    requestAnimationFrame(animate);
+    waterSurface.animate();
     controls.update();
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
   }
 
   animate();
