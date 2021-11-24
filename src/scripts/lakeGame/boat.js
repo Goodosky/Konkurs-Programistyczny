@@ -1,5 +1,4 @@
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { CollisionManager } from "./collisionManager";
 
 export class Boat {
@@ -11,18 +10,15 @@ export class Boat {
   }
 
   loadModel(scene, coliders) {
-    const mtlLoader = new MTLLoader();
-    mtlLoader.load("/models/BoatWSail.mtl", (mtl) => {
-      mtl.preload();
-      const objLoader = new OBJLoader();
-      objLoader.setMaterials(mtl);
-      objLoader.load("/models/BoatWSail.obj", (boat) => {
-        boat.position.y = 0.05;
-        scene.add(boat);
-        this._boat = boat;
-        this._collisionManager = new CollisionManager(boat, coliders);
-        this._modelLoaded = true;
-      });
+    const loader = new FBXLoader();
+    loader.load("/models/BoatWSail.fbx", (boat) => {
+      boat.scale.multiplyScalar(0.012);
+      boat.position.y = 0.05;
+      scene.add(boat);
+
+      this._boat = boat;
+      this._collisionManager = new CollisionManager(boat, coliders);
+      this._modelLoaded = true;
     });
   }
 
