@@ -3,8 +3,12 @@ import * as THREE from "three";
 export class WaterSurface {
   constructor(scene) {
     this.waterSurface = new THREE.Mesh(
-      new THREE.PlaneGeometry(20, 20, 40, 40),
-      new THREE.MeshPhongMaterial({ color: 0x44ddff, side: THREE.BackSide, shininess: 250 })
+      new THREE.PlaneGeometry(20, 30, 40, 40),
+      new THREE.MeshPhongMaterial({
+        color: 0x44ddff,
+        side: THREE.BackSide,
+        shininess: 150,
+      })
     );
     this.waterSurface.rotation.x = Math.PI / 2;
     this.waterSurface.position.y = -0.02;
@@ -16,6 +20,8 @@ export class WaterSurface {
     for (let i = 2; i < this.numberOfVertices; i += 3) {
       this.startPositions[i] = Math.random() * 6;
     }
+
+    this.waterSurface.material.flatShading = true;
   }
 
   animate() {
@@ -25,7 +31,5 @@ export class WaterSurface {
       this.positionsArray[i] = 0.1 * Math.sin(this.startPositions[i]);
       this.startPositions[i] += 0.008;
     }
-
-    this.waterSurface.geometry.computeVertexNormals();
   }
 }
