@@ -48,10 +48,12 @@ export class Terrain {
       const x = positionsArray[i];
       const z = positionsArray[i + 1];
 
-      // Check
+      // Check if lake area
       if (x < 10 && x > -10 && z < 15 && z > -15) {
-        positionsArray[i + 2] = 2;
+        // Set Y under water
+        positionsArray[i + 2] = 0.5;
       } else {
+        // Generete Y with some noise
         positionsArray[i + 2] = Math.random() * 0.8 - 0.1;
       }
     }
@@ -60,11 +62,10 @@ export class Terrain {
   }
 
   loadTreeModels() {
-    const numberOfTreeModels = 5;
     const loader = new FBXLoader();
     const promises = [];
 
-    for (let i = 1; i <= numberOfTreeModels; i++) {
+    for (let i = 1; i <= this.numberOfTreeModels; i++) {
       const treeModel = loader.loadAsync(`/models/tree_${i}.fbx`);
       promises.push(treeModel);
     }
@@ -124,7 +125,10 @@ export class Terrain {
     // Scale model
     tree.scale.multiplyScalar(Math.random() * 0.003 + 0.005);
 
-    // Change tree material and color
+    // Change trunk material and color
+    tree.children[0].material[0] = new THREE.MeshPhongMaterial({ color: 0x30221c });
+
+    // Change leavs material and color
     const material = new THREE.MeshPhongMaterial({ color: color });
     tree.children[0].material[1] = material;
     tree.children[0].material[2] = material;
@@ -138,6 +142,5 @@ export class Terrain {
 
     // Add tree to scene
     this.scene.add(tree);
-    // tree.matrixAutoUpdate = false;
   }
 }
