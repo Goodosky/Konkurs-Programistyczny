@@ -31,6 +31,7 @@ export function startBoatGame() {
 
   // Axis
   var axis = new THREE.AxesHelper(10);
+  axis.position.y = 1;
   scene.add(axis);
 
   // Grid
