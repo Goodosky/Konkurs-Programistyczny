@@ -47,15 +47,7 @@ export function startBoatGame() {
   console.log("terrain:", terrain);
 
   // Render Colliders
-  const collider = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshNormalMaterial({}));
-  collider.position.set(15, 1, 0);
-  scene.add(collider);
-
-  const collider2 = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshPhongMaterial({ color: 0x00ffff }));
-  collider2.position.set(5, 5, 0);
-  scene.add(collider2);
-
-  const coliders = [collider];
+  const coliders = [];
 
   // Render Boat
   const boat = new Boat();
