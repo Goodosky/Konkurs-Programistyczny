@@ -35,10 +35,6 @@ export function startBoatGame() {
   axis.position.y = 1;
   scene.add(axis);
 
-  // Grid
-  const grid = new THREE.GridHelper(30, 30);
-  scene.add(grid);
-
   // Water surface
   const waterSurface = new WaterSurface(scene);
 
