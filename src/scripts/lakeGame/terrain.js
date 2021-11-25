@@ -1,0 +1,143 @@
+import * as THREE from "three";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+
+export class Terrain {
+  constructor(scene) {
+    // Set class variables
+    this.scene = scene;
+    this.terrainSize = {
+      x: 60,
+      z: 60,
+    };
+
+    // Forest settings
+    this.numberOfTreeModels = 5;
+    this.treesColors = [0x224e24, 0x293a16, 0x1c280f];
+    this.treesScatter = 0.85;
+    this.forrestFreeTerrains = {
+      lake: {
+        minX: -12,
+        maxX: 12,
+        minZ: -17,
+        maxZ: 15.5,
+      },
+      farm: {
+        minX: -4,
+        maxX: 25,
+        minZ: -3,
+        maxZ: 25,
+      },
+    };
+
+    // Generete terrain
+    this.genereteTerrainSurface();
+    this.genereteForest();
+  }
+
+  genereteTerrainSurface() {
+    const terrainSurface = new THREE.Mesh(
+      new THREE.PlaneGeometry(this.terrainSize.x, this.terrainSize.z, 30, 30),
+      new THREE.MeshPhongMaterial({ color: 0x8bc34a, side: THREE.BackSide, shininess: 25 })
+    );
+
+    terrainSurface.material.flatShading = true;
+    terrainSurface.rotation.x = Math.PI / 2;
+
+    const positionsArray = terrainSurface.geometry.attributes.position.array;
+    for (let i = 0; i < positionsArray.length; i += 3) {
+      const x = positionsArray[i];
+      const z = positionsArray[i + 1];
+
+      // Check
+      if (x < 10 && x > -10 && z < 15 && z > -15) {
+        positionsArray[i + 2] = 2;
+      } else {
+        positionsArray[i + 2] = Math.random() * 0.8 - 0.1;
+      }
+    }
+
+    this.scene.add(terrainSurface);
+  }
+
+  loadTreeModels() {
+    const numberOfTreeModels = 5;
+    const loader = new FBXLoader();
+    const promises = [];
+
+    for (let i = 1; i <= numberOfTreeModels; i++) {
+      const treeModel = loader.loadAsync(`/models/tree_${i}.fbx`);
+      promises.push(treeModel);
+    }
+
+    return Promise.all(promises);
+  }
+
+  async genereteForest() {
+    // Load trees models
+    const treesModels = await this.loadTreeModels();
+
+    // Tress lines generator
+    const maxX = this.terrainSize.x / 2 - this.treesScatter;
+    const minX = maxX * -1;
+    const maxZ = this.terrainSize.z / 2 - this.treesScatter;
+    const minZ = maxZ * -1;
+    let positionX = minX;
+    let positionZ = minZ;
+
+    const drawTreeModel = () => treesModels[Math.floor(Math.random() * this.numberOfTreeModels)];
+    const drawColor = () => this.treesColors[Math.floor(Math.random() * this.treesColors.length)];
+
+    while (positionX >= minX && positionX <= maxX) {
+      // Add trees line on x axis
+      while (positionZ >= minZ && positionZ <= maxZ) {
+        // Check if is crossing with area without trees
+        if (!this.isCrossingForestFreeArea(positionX, positionZ)) {
+          // If false generete new tree
+          const tree = drawTreeModel().clone();
+          this.generateTree(tree, positionX, positionZ, drawColor());
+        }
+
+        positionZ += this.treesScatter;
+      }
+
+      // Restart positionZ
+      positionZ = minZ;
+
+      // Increase positionX
+      positionX += this.treesScatter;
+    }
+  }
+
+  isCrossingForestFreeArea(x, z) {
+    let isCrossing = false;
+
+    for (const areaName in this.forrestFreeTerrains) {
+      const area = this.forrestFreeTerrains[areaName];
+      isCrossing = x > area.minX && x < area.maxX && z > area.minZ && z < area.maxZ;
+      if (isCrossing) break;
+    }
+
+    return isCrossing;
+  }
+
+  generateTree(tree, positionX, positionZ, color) {
+    // Scale model
+    tree.scale.multiplyScalar(Math.random() * 0.003 + 0.005);
+
+    // Change tree material and color
+    const material = new THREE.MeshPhongMaterial({ color: color });
+    tree.children[0].material[1] = material;
+    tree.children[0].material[2] = material;
+
+    // Set tree position
+    tree.position.x = positionX + Math.random() * this.treesScatter;
+    tree.position.z = positionZ + Math.random() * this.treesScatter;
+
+    // Rotate tree
+    tree.rotation.y += Math.random() * Math.PI;
+
+    // Add tree to scene
+    this.scene.add(tree);
+    // tree.matrixAutoUpdate = false;
+  }
+}

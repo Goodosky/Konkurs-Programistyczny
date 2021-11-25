@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Boat } from "./boat";
 import { EventHandler } from "./eventHandler";
 import { WaterSurface } from "./waterSurface";
+import { Terrain } from "./terrain";
 
 export function startBoatGame() {
   // Scene
@@ -40,6 +41,10 @@ export function startBoatGame() {
 
   // Water surface
   const waterSurface = new WaterSurface(scene);
+
+  // Terrain
+  const terrain = new Terrain(scene);
+  console.log("terrain:", terrain);
 
   // Render Colliders
   const collider = new THREE.Mesh(new THREE.BoxGeometry(1, 1), new THREE.MeshNormalMaterial({}));
