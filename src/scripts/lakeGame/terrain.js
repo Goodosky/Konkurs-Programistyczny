@@ -6,8 +6,10 @@ export class Terrain {
     // Set class variables
     this.scene = scene;
     this.terrainSize = {
-      x: 60,
-      z: 60,
+      startX: -25,
+      startZ: -30,
+      width: 55, // x
+      height: 60, // z
     };
 
     // Forest settings
@@ -35,14 +37,20 @@ export class Terrain {
   }
 
   genereteTerrainSurface() {
+    // Crete terrain mesh
     const terrainSurface = new THREE.Mesh(
-      new THREE.PlaneGeometry(this.terrainSize.x, this.terrainSize.z, 30, 30),
+      new THREE.PlaneGeometry(this.terrainSize.width, this.terrainSize.height, 30, 30),
       new THREE.MeshPhongMaterial({ color: 0x8bc34a, side: THREE.BackSide, shininess: 25 })
     );
 
     terrainSurface.material.flatShading = true;
     terrainSurface.rotation.x = Math.PI / 2;
 
+    // Move the terrain so that it begins at the startX and startZ.
+    terrainSurface.position.x += this.terrainSize.width / 2 + this.terrainSize.startX;
+    terrainSurface.position.z += this.terrainSize.height / 2 + this.terrainSize.startZ;
+
+    // Add noise to the terrain
     const positionsArray = terrainSurface.geometry.attributes.position.array;
     for (let i = 0; i < positionsArray.length; i += 3) {
       const x = positionsArray[i];
@@ -78,10 +86,11 @@ export class Terrain {
     const treesModels = await this.loadTreeModels();
 
     // Tress lines generator
-    const maxX = this.terrainSize.x / 2 - this.treesScatter;
-    const minX = maxX * -1;
-    const maxZ = this.terrainSize.z / 2 - this.treesScatter;
-    const minZ = maxZ * -1;
+    const minX = this.terrainSize.startX;
+    const maxX = this.terrainSize.startX + this.terrainSize.width;
+    const minZ = this.terrainSize.startZ;
+    const maxZ = this.terrainSize.startZ + this.terrainSize.height;
+
     let positionX = minX;
     let positionZ = minZ;
 
