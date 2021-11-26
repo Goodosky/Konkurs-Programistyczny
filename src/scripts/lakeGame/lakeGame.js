@@ -42,12 +42,11 @@ export function startBoatGame() {
   const terrain = new Terrain(scene);
   console.log("terrain:", terrain);
 
-  // Render Colliders
-  const coliders = [];
+  // Render collision walls
+  // ...
 
   // Render Boat
-  const boat = new Boat();
-  boat.loadModel(scene, coliders);
+  const boat = new Boat(scene);
 
   // Add event handlers
   new EventHandler(boat);

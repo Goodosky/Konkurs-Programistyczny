@@ -1,8 +1,8 @@
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
-import { CollisionManager } from "./collisionManager";
+import { CollisionDetector } from "./collisionDetector";
 
 export class Boat {
-  constructor() {
+  constructor(scene) {
     this._boat = undefined;
     this._modelLoaded = false;
 
@@ -18,9 +18,12 @@ export class Boat {
       isTurningLeft: false,
       isTurningRight: false,
     };
+
+    // Load model
+    this.loadModel(scene);
   }
 
-  loadModel(scene, coliders) {
+  loadModel(scene) {
     const loader = new FBXLoader();
     loader.load("/models/BoatWSail.fbx", (boat) => {
       boat.scale.multiplyScalar(0.012);
@@ -28,7 +31,7 @@ export class Boat {
       scene.add(boat);
 
       this._boat = boat;
-      this._collisionManager = new CollisionManager(boat, coliders);
+      this._collisionManager = new CollisionDetector(boat);
       this._modelLoaded = true;
     });
   }
@@ -95,7 +98,7 @@ export class Boat {
     }
 
     // Check collision
-    if (this._collisionManager.checkCollision()) {
+    if (this._collisionManager.checkCollisionWithCollisionWalls()) {
       if (!this._blockDirection) {
         this.moveStop();
         this._blockDirection = this.speedFoward > 0 ? "foward" : "backword";
