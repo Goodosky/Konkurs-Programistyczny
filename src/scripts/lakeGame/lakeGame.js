@@ -55,6 +55,7 @@ export function startBoatGame() {
   // Animate
   function animate() {
     waterSurface.animate();
+    boat.animate();
     controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(animate);

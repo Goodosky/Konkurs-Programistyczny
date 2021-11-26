@@ -13,12 +13,12 @@ export class CollisionManager {
 
   checkCollision() {
     // Update boat Box3
-    this._boatBox3 = new THREE.Box3().setFromObject(this._boat);
+    const boatBox3 = new THREE.Box3().setFromObject(this._boat);
 
     // Check collision
     let isCollision = false;
     for (const colider of this._colidersBoxes3) {
-      colider.intersectsBox(this._boatBox3) && (isCollision = true);
+      colider.intersectsBox(boatBox3) && (isCollision = true);
     }
 
     return isCollision;
