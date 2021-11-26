@@ -1,6 +1,10 @@
 export class EventHandler {
-  constructor(boat) {
+  constructor(boat, dataForHUD) {
+    this.eventsDisaled = false;
+
     document.addEventListener("keydown", (e) => {
+      if (dataForHUD.timeToStart > 0 || dataForHUD.remainingTime < 0) return boat.moveStop();
+
       if (e.key == "ArrowUp") {
         boat.moveBoat("foward");
       } else if (e.key == "ArrowDown") {
@@ -19,5 +23,9 @@ export class EventHandler {
         boat.rotationStop();
       }
     });
+  }
+
+  disableEvents() {
+    this.eventsDisaled = true;
   }
 }

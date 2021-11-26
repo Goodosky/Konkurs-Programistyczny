@@ -31,7 +31,7 @@ export class Boat {
       scene.add(boat);
 
       this._boat = boat;
-      this._collisionManager = new CollisionDetector(boat);
+      this._collisionDetector = new CollisionDetector(boat);
       this._modelLoaded = true;
     });
   }
@@ -98,7 +98,7 @@ export class Boat {
     }
 
     // Check collision
-    if (this._collisionManager.checkCollisionWithCollisionWalls()) {
+    if (this._collisionDetector.checkCollisionWithCollisionWalls()) {
       if (!this._blockDirection) {
         this.moveStop();
         this._blockDirection = this.speedFoward > 0 ? "foward" : "backword";

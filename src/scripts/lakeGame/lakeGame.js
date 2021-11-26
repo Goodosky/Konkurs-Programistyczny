@@ -4,9 +4,10 @@ import { Boat } from "./boat";
 import { EventHandler } from "./eventHandler";
 import { WaterSurface } from "./waterSurface";
 import { Terrain } from "./terrain";
+import { GameLogic } from "./gameLogic";
 import { Pointer } from "./pointer";
 
-export function startBoatGame() {
+export function startBoatGame(dataForHUD) {
   // Scene
   const scene = new THREE.Scene();
 
@@ -49,8 +50,11 @@ export function startBoatGame() {
   // Render Boat
   const boat = new Boat(scene);
 
+  // Init Game logic
+  const gameLogic = new GameLogic(dataForHUD);
+
   // Add event handlers
-  new EventHandler(boat);
+  new EventHandler(boat, dataForHUD);
 
   // Pointer
   const pointer = new Pointer(scene);
@@ -61,9 +65,14 @@ export function startBoatGame() {
     boat.animate();
     pointer.animate();
 
-    // Pointer is captured
-    if (boat._modelLoaded && boat._collisionManager.checkCollision(pointer.pointerObj)) {
-      pointer.hide();
+    if (boat._modelLoaded) {
+      gameLogic.updateTime();
+
+      // Handle the pointer capture
+      if (dataForHUD.timeToStart <= 0 && boat._collisionDetector.checkCollision(pointer.pointerObj)) {
+        pointer.putInRandomPlace();
+        gameLogic.nextLevel();
+      }
     }
 
     controls.update();
