@@ -4,6 +4,7 @@ import { Boat } from "./boat";
 import { EventHandler } from "./eventHandler";
 import { WaterSurface } from "./waterSurface";
 import { Terrain } from "./terrain";
+import { Pointer } from "./pointer";
 
 export function startBoatGame() {
   // Scene
@@ -51,10 +52,20 @@ export function startBoatGame() {
   // Add event handlers
   new EventHandler(boat);
 
+  // Pointer
+  const pointer = new Pointer(scene);
+
   // Animate
   function animate() {
     waterSurface.animate();
     boat.animate();
+    pointer.animate();
+
+    // Pointer is captured
+    if (boat._modelLoaded && boat._collisionManager.checkCollision(pointer.pointerObj)) {
+      pointer.hide();
+    }
+
     controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
