@@ -57,7 +57,7 @@ export class Terrain {
       const z = positionsArray[i + 1];
 
       // Check if lake area
-      if (x < 10 && x > -10 && z < 15 && z > -15) {
+      if (x < 7 && x > -12 && z < 16 && z > -15) {
         // Set Y under water
         positionsArray[i + 2] = 0.5;
       } else {

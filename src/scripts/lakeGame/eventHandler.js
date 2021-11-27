@@ -3,7 +3,7 @@ export class EventHandler {
     this.eventsDisaled = false;
 
     document.addEventListener("keydown", (e) => {
-      if (dataForHUD.timeToStart > 0 || dataForHUD.remainingTime < 0) return boat.moveStop();
+      if (dataForHUD.timeToStart >= 0 || dataForHUD.remainingTime <= 0) return boat.moveStop();
 
       if (e.key == "ArrowUp") {
         boat.moveBoat("foward");

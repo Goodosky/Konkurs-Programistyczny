@@ -8,16 +8,20 @@ import { GameLogic } from "./gameLogic";
 import { Pointer } from "./pointer";
 
 export function startBoatGame(dataForHUD) {
+  // Canvas
+  const canvas = document.querySelector("#gameCanvasBoard");
+  const canvasWidth = window.innerWidth - 300;
+  const canvasHeight = window.innerHeight;
+
   // Scene
   const scene = new THREE.Scene();
 
   // Renderer
-  const canvas = document.querySelector("#gameCanvasBoard");
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(canvasWidth, canvasHeight);
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
   camera.position.set(0, 1, 20);
 
   const controls = new OrbitControls(camera, canvas);
