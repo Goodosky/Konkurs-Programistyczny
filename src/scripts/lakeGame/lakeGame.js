@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import Stats from "three/examples/jsm/libs/stats.module.js";
 import { Boat } from "./boat";
 import { EventHandler } from "./eventHandler";
 import { WaterSurface } from "./waterSurface";
@@ -43,10 +42,6 @@ export function startBoatGame(dataForHUD, userSettings) {
   sunLight.castShadow = true;
   scene.add(sunLight);
 
-  // Stats
-  const stats = new Stats();
-  document.body.appendChild(stats.dom);
-
   // Clock
   const clock = new THREE.Clock();
 
@@ -84,7 +79,6 @@ export function startBoatGame(dataForHUD, userSettings) {
     }
 
     controls.update();
-    stats.update();
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
