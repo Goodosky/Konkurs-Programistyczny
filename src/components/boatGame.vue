@@ -1,5 +1,4 @@
 <template>
-  <button @click="restartGame">RESTART</button>
   <div class="flex">
     <boatGameHUD :data="dataForHUD"></boatGameHUD>
     <canvas id="gameCanvasBoard"></canvas>
@@ -8,8 +7,30 @@
     <transition name="fade">
       <div v-show="dataForHUD.timeToStart > 0" class="backdrop">
         <!-- timeToStart Counter -->
-        <div v-if="dataForHUD.timeToStart < 3" class="time-to-start-counter">
+        <div v-if="dataForHUD.timeToStart < 3" class="time-to-start-counter z-10">
           {{ Math.floor(dataForHUD.timeToStart) + 1 }}
+        </div>
+        <!-- Setting modal -->
+        <div class="z-10 text-center" v-if="!dataForHUD.gameStarted">
+          <h1 class="text-5xl mb-8">Witaj!</h1>
+
+          <div class="flex justify-center items-center mb-8">
+            <h2 class="mr-5">Ustawienia Graficzne:</h2>
+            <select class="text-balck" v-model="userSettings.graphicQuality">
+              <option value="low">niskie</option>
+              <option selected value="normal">normalne</option>
+            </select>
+          </div>
+
+          <button
+            @click="
+              startBoatGame(dataForHUD, userSettings);
+              dataForHUD.gameStarted = true;
+            "
+            class="bg-cdark px-8 py-3 rounded-lg transition-colors duration-500 hover:bg-cgreen"
+          >
+            Rozpocznij grę!
+          </button>
         </div>
       </div>
     </transition>
@@ -18,7 +39,7 @@
 
 <script>
 import { startBoatGame } from "../scripts/lakeGame/lakeGame";
-import { reactive, onMounted } from "vue";
+import { reactive } from "vue";
 import boatGameHUD from "./boatGameHUD.vue";
 
 export default {
@@ -29,6 +50,11 @@ export default {
       timeToStart: 3, // in seconds
       points: 0,
       remainingTime: 10, // in seconds
+      gameStarted: false,
+    });
+
+    const userSettings = reactive({
+      graphicQuality: "normal", // normal or low
     });
 
     function restartGame() {
@@ -37,11 +63,7 @@ export default {
       dataForHUD.remainingTime = 10;
     }
 
-    onMounted(() => {
-      startBoatGame(dataForHUD);
-    });
-
-    return { dataForHUD, restartGame };
+    return { dataForHUD, userSettings, restartGame, startBoatGame };
   },
 };
 </script>
@@ -71,7 +93,17 @@ export default {
 
   .time-to-start-counter {
     font-size: 15rem;
-    z-index: 1;
+  }
+
+  select {
+    background-color: transparent;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 5px 15px;
+  }
+
+  option {
+    color: #000;
   }
 }
 

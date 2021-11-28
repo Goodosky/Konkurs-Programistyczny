@@ -8,7 +8,7 @@ import { Terrain } from "./terrain";
 import { GameLogic } from "./gameLogic";
 import { Pointer } from "./pointer";
 
-export function startBoatGame(dataForHUD) {
+export function startBoatGame(dataForHUD, userSettings) {
   // Canvas
   const canvas = document.querySelector("#gameCanvasBoard");
   const canvasWidth = window.innerWidth - 300;
@@ -58,7 +58,7 @@ export function startBoatGame(dataForHUD) {
   const waterSurface = new WaterSurface(scene);
 
   // Terrain
-  const terrain = new Terrain(scene);
+  const terrain = new Terrain(scene, userSettings.graphicQuality);
   console.log("terrain:", terrain);
 
   // Render collision walls

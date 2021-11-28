@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 
 export class Terrain {
-  constructor(scene) {
+  constructor(scene, graphicQuality) {
     // Set class variables
     this.scene = scene;
     this.terrainSize = {
@@ -31,9 +31,11 @@ export class Terrain {
       },
     };
 
-    // Generete terrain
+    // Generete terrain surface
     this.genereteTerrainSurface();
-    this.genereteForest();
+
+    // Generate forrest (only if graphic quality == 'normal')
+    if (graphicQuality == "normal") this.genereteForest();
   }
 
   genereteTerrainSurface() {
