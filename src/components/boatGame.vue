@@ -1,17 +1,18 @@
 <template>
   <div class="flex">
-    <boatGameHUD :data="dataForHUD"></boatGameHUD>
+    <boatGameHUD :data="dataForHUD" />
     <canvas id="gameCanvasBoard"></canvas>
 
     <!-- Backdrop -->
     <transition name="fade">
-      <div v-show="dataForHUD.timeToStart > 0" class="backdrop">
+      <div v-show="dataForHUD.timeToStart > 0 || dataForHUD.remainingTime <= 0" class="backdrop">
         <!-- timeToStart Counter -->
-        <div v-if="dataForHUD.timeToStart < 3" class="time-to-start-counter z-10">
+        <div v-if="dataForHUD.timeToStart < 3 && dataForHUD.timeToStart > 0" class="time-to-start-counter z-10">
           {{ Math.floor(dataForHUD.timeToStart) + 1 }}
         </div>
+
         <!-- Setting modal -->
-        <div class="z-10 text-center" v-if="!dataForHUD.gameStarted">
+        <div v-if="!dataForHUD.gameStarted" class="z-10 text-center">
           <h1 class="text-5xl mb-8">Witaj!</h1>
 
           <div class="flex justify-center items-center mb-5">
@@ -40,6 +41,17 @@
             Rozpocznij grę!
           </button>
         </div>
+
+        <!-- Game over modal -->
+        <div v-if="dataForHUD.remainingTime <= 0" class="z-10 text-center">
+          <gameoverModalBody :data="dataForHUD" />
+          <button
+            @click="restartGame"
+            class="bg-cdark mt-8 px-8 py-3 rounded-lg transition-colors duration-500 hover:bg-cgreen"
+          >
+            Zagraj jescze raz!
+          </button>
+        </div>
       </div>
     </transition>
   </div>
@@ -49,10 +61,11 @@
 import { startBoatGame } from "../scripts/lakeGame/lakeGame";
 import { reactive } from "vue";
 import boatGameHUD from "./boatGameHUD.vue";
+import gameoverModalBody from "./gameoverModalBody.vue";
 
 export default {
   name: "boatGame",
-  components: { boatGameHUD },
+  components: { boatGameHUD, gameoverModalBody },
   setup() {
     const dataForHUD = reactive({
       timeToStart: 3, // in seconds
@@ -72,7 +85,7 @@ export default {
       dataForHUD.remainingTime = 10;
     }
 
-    return { dataForHUD, userSettings, restartGame, startBoatGame };
+    return { dataForHUD, userSettings, startBoatGame, restartGame };
   },
 };
 </script>
