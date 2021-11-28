@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <boatGameHUD :data="dataForHUD" />
-    <canvas id="gameCanvasBoard"></canvas>
+    <canvas class="bg-csky" id="gameCanvasBoard"></canvas>
 
     <!-- Backdrop -->
     <transition name="fade">

@@ -8,6 +8,7 @@ module.exports = {
         cyellow: "#fadc00",
         cgreen: "#53af32",
         cblue: "#28b3e8",
+        csky: "#7fd3f8",
       },
     },
   },
