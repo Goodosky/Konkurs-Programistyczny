@@ -28,7 +28,7 @@ export function startBoatGame(dataForHUD, userSettings) {
 
   // Camera
   const camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
-  camera.position.set(-24, 9.5, 0);
+  camera.position.set(-26, 15, 15);
 
   const controls = new OrbitControls(camera, canvas);
   controls.target.set(0, 0, 0);
