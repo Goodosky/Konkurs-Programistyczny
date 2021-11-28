@@ -5,7 +5,7 @@ export class GameLogic {
 
   nextLevel() {
     this.data.points += 1;
-    this.data.remainingTime += 5;
+    this.data.remainingTime += 4;
   }
 
   updateTime(timeDelta) {
