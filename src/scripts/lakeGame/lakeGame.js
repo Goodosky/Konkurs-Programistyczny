@@ -51,6 +51,9 @@ export function startBoatGame(dataForHUD) {
   const stats = new Stats();
   document.body.appendChild(stats.dom);
 
+  // Clock
+  const clock = new THREE.Clock();
+
   // Water surface
   const waterSurface = new WaterSurface(scene);
 
@@ -75,25 +78,29 @@ export function startBoatGame(dataForHUD) {
 
   // Animate
   function animate() {
-    waterSurface.animate();
-    boat.animate();
-    pointer.animate();
-
-    if (boat._modelLoaded) {
-      gameLogic.updateTime();
-
-      // Handle the pointer capture
-      if (dataForHUD.timeToStart <= 0 && boat._collisionDetector.checkCollision(pointer.pointerObj)) {
-        pointer.putInRandomPlace();
-        gameLogic.nextLevel();
-      }
-    }
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 
     controls.update();
     stats.update();
 
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    // Skip animations if the boat hasn't loaded yet
+    if (!boat._modelLoaded) return;
+
+    // Get the seconds passed since last frame
+    const timeDelta = clock.getDelta();
+
+    // Animate things
+    pointer.animate();
+    waterSurface.animate(timeDelta);
+    boat.animate(timeDelta);
+    gameLogic.updateTime(timeDelta);
+
+    // Handle the pointer capture
+    if (dataForHUD.timeToStart <= 0 && boat._collisionDetector.checkCollision(pointer.pointerObj)) {
+      pointer.putInRandomPlace();
+      gameLogic.nextLevel();
+    }
   }
 
   animate();

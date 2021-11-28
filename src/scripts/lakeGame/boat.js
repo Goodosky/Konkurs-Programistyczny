@@ -6,7 +6,10 @@ export class Boat {
     this._boat = undefined;
     this._modelLoaded = false;
 
-    this._maxSpeed = 0.03;
+    this._accelerationMultiplier = 0.04;
+    this._maxSpeedMultiplier = 3.5;
+    this._rotationMultiplier = 0.75;
+
     this.speedFoward = 0;
     this.movement = {
       foward: false,
@@ -37,8 +40,6 @@ export class Boat {
   }
 
   moveBoat(moveDirection) {
-    this.movement.isSlowing = false;
-
     if (moveDirection == "foward") {
       this.movement.foward = true;
       this.movement.backword = false;
@@ -69,14 +70,10 @@ export class Boat {
     this.movement.isTurningLeft = false;
   }
 
-  reduceSpeed() {
-    if (this.speedFoward > 0.0003) {
-      // The boat was going forward and is slowing now
-      this.speedFoward -= 0.0003;
-    } else if (this.speedFoward < -0.0003) {
-      // The boat was going backword and is slowing now
-      this.speedFoward += 0.0003;
-    } else {
+  reduceSpeed(timeDelta, maxSpeed) {
+    this.speedFoward = this.speedFoward * (1 - timeDelta * 2);
+
+    if (this.speedFoward < maxSpeed * 0.1 && this.speedFoward > -maxSpeed * 0.1) {
       // The boat speed is near 0
       this.speedFoward = 0;
       this.movement.foward = false;
@@ -84,17 +81,26 @@ export class Boat {
     }
   }
 
-  animate() {
+  animate(timeDelta) {
     // Skip animation if model hasn't been loaded yet
     if (!this._modelLoaded) return;
 
-    // Update speed (speed up or slow down)
+    const acceleration = timeDelta * this._accelerationMultiplier;
+    const rotation = timeDelta * this._rotationMultiplier;
+    const maxSpeed = timeDelta * this._maxSpeedMultiplier;
+
+    // reduce speed if is slowing
     if (this.movement.isSlowing) {
-      this.reduceSpeed();
-    } else if (this.movement.foward && this.speedFoward < this._maxSpeed && this._blockDirection != "foward") {
-      this.speedFoward += 0.0002;
-    } else if (this.movement.backword && this.speedFoward > this._maxSpeed * -1 && this._blockDirection != "backword") {
-      this.speedFoward -= 0.0002;
+      this.reduceSpeed(timeDelta, maxSpeed);
+    }
+
+    // Update speed (speed up or slow down)
+    if (this.movement.foward && this.speedFoward < maxSpeed && this._blockDirection != "foward") {
+      this.speedFoward += acceleration;
+      this.movement.isSlowing = false;
+    } else if (this.movement.backword && this.speedFoward > maxSpeed * -1 && this._blockDirection != "backword") {
+      this.speedFoward -= acceleration;
+      this.movement.isSlowing = false;
     }
 
     // Check collision
@@ -114,18 +120,18 @@ export class Boat {
       this._boat.translateZ(this.speedFoward);
 
       // Rotate boat
-      if (this.movement.isTurningRight && this.speedFoward > 0.005) {
+      if (this.movement.isTurningRight && this.speedFoward > rotation) {
         // Rotate right. The boat is sailing foward
-        this._boat.rotation.y -= 0.005;
-      } else if (this.movement.isTurningLeft && this.speedFoward > 0.005) {
+        this._boat.rotation.y -= rotation;
+      } else if (this.movement.isTurningLeft && this.speedFoward > rotation) {
+        // Rotate left. The boat is sailing foward
+        this._boat.rotation.y += rotation;
+      } else if (this.movement.isTurningRight && this.speedFoward < -rotation) {
+        // Rotate right. The boat is sailing backward
+        this._boat.rotation.y += rotation;
+      } else if (this.movement.isTurningLeft && this.speedFoward < -rotation) {
         // Rotate left. The boat is sailing backward
-        this._boat.rotation.y += 0.005;
-      } else if (this.movement.isTurningRight && this.speedFoward < -0.005) {
-        // Rotate right. The boat is sailing foward
-        this._boat.rotation.y += 0.005;
-      } else if (this.movement.isTurningLeft && this.speedFoward < -0.005) {
-        // Rotate left. The boat is sailing backward
-        this._boat.rotation.y -= 0.005;
+        this._boat.rotation.y -= rotation;
       }
     }
   }
