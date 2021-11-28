@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 import { Boat } from "./boat";
 import { EventHandler } from "./eventHandler";
 import { WaterSurface } from "./waterSurface";
@@ -17,7 +18,12 @@ export function startBoatGame(dataForHUD) {
   const scene = new THREE.Scene();
 
   // Renderer
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+    powerPreference: "high-performance",
+  });
   renderer.setSize(canvasWidth, canvasHeight);
 
   // Camera
@@ -40,6 +46,10 @@ export function startBoatGame(dataForHUD) {
   var axis = new THREE.AxesHelper(10);
   axis.position.y = 1;
   scene.add(axis);
+
+  // Stats
+  const stats = new Stats();
+  document.body.appendChild(stats.dom);
 
   // Water surface
   const waterSurface = new WaterSurface(scene);
@@ -80,6 +90,8 @@ export function startBoatGame(dataForHUD) {
     }
 
     controls.update();
+    stats.update();
+
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
