@@ -1,9 +1,12 @@
 import * as THREE from "three";
+import { ColiderConstructor } from "./coliderConstructor";
 
 export class CollisionDetector {
   constructor(boat) {
     this._boat = boat;
-    this._collisionWalls = [];
+
+    const coliderConstructor = new ColiderConstructor();
+    this._collisionWalls = coliderConstructor.getLakeColiders();
   }
 
   checkCollisionWithCollisionWalls() {
