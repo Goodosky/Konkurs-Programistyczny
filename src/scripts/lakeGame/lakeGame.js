@@ -43,11 +43,6 @@ export function startBoatGame(dataForHUD, userSettings) {
   sunLight.castShadow = true;
   scene.add(sunLight);
 
-  // Axis
-  var axis = new THREE.AxesHelper(10);
-  axis.position.y = 1;
-  scene.add(axis);
-
   // Stats
   const stats = new Stats();
   document.body.appendChild(stats.dom);
