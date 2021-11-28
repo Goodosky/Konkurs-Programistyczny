@@ -1,9 +1,6 @@
-import * as THREE from "three";
-
 export class GameLogic {
   constructor(dataForHUD) {
     this.data = dataForHUD;
-    this.clock = new THREE.Clock();
   }
 
   nextLevel() {
@@ -11,14 +8,16 @@ export class GameLogic {
     this.data.remainingTime += 3;
   }
 
-  updateTime() {
-    const delta = this.clock.getDelta();
+  updateTime(timeDelta) {
+    // Skip if user hasn't clicked the start btn yet
+    if (!this.data.gameStarted) return;
 
+    // Update timers
     if (this.data.timeToStart >= 0) {
-      this.data.timeToStart -= delta;
-    } else if (this.data.remainingTime < delta) {
+      this.data.timeToStart -= timeDelta;
+    } else if (this.data.remainingTime < timeDelta) {
       this.clock.stop;
       this.data.remainingTime = 0;
-    } else this.data.remainingTime -= delta;
+    } else this.data.remainingTime -= timeDelta;
   }
 }
