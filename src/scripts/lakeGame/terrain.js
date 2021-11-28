@@ -15,7 +15,7 @@ export class Terrain {
     // Forest settings
     this.numberOfTreeModels = 5;
     this.treesColors = [0x224e24, 0x293a16, 0x1c280f];
-    this.treesScatter = 0.85;
+    this.treesScatter = 1;
     this.forrestFreeTerrains = {
       lake: {
         minX: -12,
@@ -37,7 +37,7 @@ export class Terrain {
   }
 
   genereteTerrainSurface() {
-    // Crete terrain mesh
+    // Create terrain mesh
     const terrainSurface = new THREE.Mesh(
       new THREE.PlaneGeometry(this.terrainSize.width, this.terrainSize.height, 30, 30),
       new THREE.MeshPhongMaterial({ color: 0x8bc34a, side: THREE.BackSide, shininess: 25 })
@@ -82,8 +82,17 @@ export class Terrain {
   }
 
   async genereteForest() {
+    // Helpers
+    const drawTreeId = () => Math.floor(Math.random() * this.numberOfTreeModels);
+
     // Load trees models
     const treesModels = await this.loadTreeModels();
+
+    // Make array with instance for everone tree model
+    const { instancedMeshes, instancedMeshesCounter } = this.modelsToInsctaces(treesModels);
+
+    // Create matrix
+    const matrix = new THREE.Matrix4();
 
     // Tress lines generator
     const minX = this.terrainSize.startX;
@@ -94,17 +103,20 @@ export class Terrain {
     let positionX = minX;
     let positionZ = minZ;
 
-    const drawTreeModel = () => treesModels[Math.floor(Math.random() * this.numberOfTreeModels)];
-    const drawColor = () => this.treesColors[Math.floor(Math.random() * this.treesColors.length)];
-
     while (positionX >= minX && positionX <= maxX) {
       // Add trees line on x axis
       while (positionZ >= minZ && positionZ <= maxZ) {
         // Check if is crossing with area without trees
         if (!this.isCrossingForestFreeArea(positionX, positionZ)) {
-          // If false generete new tree
-          const tree = drawTreeModel().clone();
-          this.generateTree(tree, positionX, positionZ, drawColor());
+          // Draw tree instance index
+          const treeId = drawTreeId();
+
+          // Generete new tree
+          this.updateMatrix(matrix, positionX, positionZ);
+          instancedMeshes[treeId].setMatrixAt(instancedMeshesCounter[treeId], matrix);
+
+          // Increment counter
+          instancedMeshesCounter[treeId]++;
         }
 
         positionZ += this.treesScatter;
@@ -115,6 +127,15 @@ export class Terrain {
 
       // Increase positionX
       positionX += this.treesScatter;
+    }
+
+    console.log("instancedMeshesCounter:", instancedMeshesCounter);
+
+    for (let i = 0; i < this.numberOfTreeModels; i++) {
+      // Reduce number of instances of mesh
+      instancedMeshes[i].count = instancedMeshesCounter[i];
+      // Add mesh to scene
+      this.scene.add(instancedMeshes[i]);
     }
   }
 
@@ -130,26 +151,42 @@ export class Terrain {
     return isCrossing;
   }
 
-  generateTree(tree, positionX, positionZ, color) {
-    // Scale model
-    tree.scale.multiplyScalar(Math.random() * 0.003 + 0.005);
+  modelsToInsctaces(treesModels) {
+    const drawColor = () => this.treesColors[Math.floor(Math.random() * this.treesColors.length)];
 
-    // Change trunk material and color
-    tree.children[0].material[0] = new THREE.MeshPhongMaterial({ color: 0x30221c });
+    const instancedMeshes = [];
+    const instancedMeshesCounter = [];
 
-    // Change leavs material and color
-    const material = new THREE.MeshPhongMaterial({ color: color });
-    tree.children[0].material[1] = material;
-    tree.children[0].material[2] = material;
+    for (let i = 0; i < this.numberOfTreeModels; i++) {
+      const treeMesh = treesModels[i].children[0];
+      treeMesh.material = [
+        new THREE.MeshPhongMaterial({ color: 0x30221c }), // trunk
+        new THREE.MeshPhongMaterial({ color: drawColor() }), // leavs
+        new THREE.MeshPhongMaterial({ color: drawColor() }), // leavs (in some models)
+      ];
+      instancedMeshes.push(new THREE.InstancedMesh(treeMesh.geometry, treeMesh.material, 800));
+      instancedMeshesCounter.push(0);
+    }
 
-    // Set tree position
-    tree.position.x = positionX + Math.random() * this.treesScatter;
-    tree.position.z = positionZ + Math.random() * this.treesScatter;
+    return { instancedMeshes, instancedMeshesCounter };
+  }
 
-    // Rotate tree
-    tree.rotation.y += Math.random() * Math.PI;
+  updateMatrix(matrix, positionX, positionZ) {
+    const position = new THREE.Vector3();
+    const rotation = new THREE.Euler();
+    const quaternion = new THREE.Quaternion();
+    const scale = new THREE.Vector3();
 
-    // Add tree to scene
-    this.scene.add(tree);
+    position.x = positionX + Math.random() * this.treesScatter;
+    position.z = positionZ + Math.random() * this.treesScatter;
+
+    rotation.z += Math.random() * Math.PI;
+    rotation.x -= Math.PI / 2;
+
+    quaternion.setFromEuler(rotation);
+
+    scale.x = scale.y = scale.z = Math.random() * 0.5 + 0.6;
+
+    matrix.compose(position, quaternion, scale);
   }
 }
