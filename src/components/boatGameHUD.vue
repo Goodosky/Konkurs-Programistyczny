@@ -7,8 +7,6 @@
 
     <p class="text-lg mb-1">Ilość punktów:</p>
     <h2 class="text-4xl mb-12">{{ data.points }}</h2>
-
-    {{ data }}
   </div>
 </template>
 
