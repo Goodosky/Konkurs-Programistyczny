@@ -7,7 +7,7 @@ export class Boat {
     this._modelLoaded = false;
 
     this._accelerationMultiplier = 0.04;
-    this._maxSpeedMultiplier = 3.5;
+    this._maxSpeedMultiplier = 4;
     this._rotationMultiplier = 0.75;
 
     this.speedFoward = 0;
