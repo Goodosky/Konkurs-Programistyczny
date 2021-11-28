@@ -32,6 +32,7 @@ export function startBoatGame(dataForHUD, userSettings) {
 
   const controls = new OrbitControls(camera, canvas);
   controls.target.set(0, 0, 0);
+  controls.maxPolarAngle = Math.PI / 2 - 0.2;
 
   // Lights
   const ambientLight = new THREE.AmbientLight(0xffffff, 1);
