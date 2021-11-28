@@ -1,24 +1,6 @@
 # wim-game
 
-## Project setup
-```
-npm install
-```
+### Link do gry: https://hostingwp2176669.online.pro/wim-game/
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Dlaczego nie ma instrucji uruchomienia lokalnie?
+Na finalnym etapie tworzenia gry okazało się, że nie da się jej uruchomić lokalnie przez zabezpieczenia przeglądarek (CORS). A czasu na poszperanie w necie brak... :)
