@@ -32,7 +32,6 @@ export class Terrain {
     };
 
     this.forrestGenerated = false;
-    this.farmGenerated = false;
 
     // Generete terrain surface
     this.genereteTerrainSurface();
