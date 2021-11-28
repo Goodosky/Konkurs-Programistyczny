@@ -32,10 +32,7 @@
           </div>
 
           <button
-            @click="
-              startBoatGame(dataForHUD, userSettings);
-              dataForHUD.gameStarted = true;
-            "
+            @click="dataForHUD.gameStarted = true"
             class="bg-cdark mt-8 px-8 py-3 rounded-lg transition-colors duration-500 hover:bg-cgreen"
           >
             Rozpocznij grę!
@@ -59,7 +56,7 @@
 
 <script>
 import { startBoatGame } from "../scripts/lakeGame/lakeGame";
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
 import boatGameHUD from "./boatGameHUD.vue";
 import gameoverModalBody from "./gameoverModalBody.vue";
 
@@ -84,6 +81,10 @@ export default {
       dataForHUD.points = 0;
       dataForHUD.remainingTime = 10;
     }
+
+    onMounted(() => {
+      startBoatGame(dataForHUD, userSettings);
+    });
 
     return { dataForHUD, userSettings, startBoatGame, restartGame };
   },

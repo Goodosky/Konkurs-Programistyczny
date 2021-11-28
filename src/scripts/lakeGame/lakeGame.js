@@ -54,8 +54,7 @@ export function startBoatGame(dataForHUD, userSettings) {
   const waterSurface = new WaterSurface(scene);
 
   // Terrain
-  const terrain = new Terrain(scene, userSettings.graphicQuality);
-  console.log("terrain:", terrain);
+  const terrain = new Terrain(scene);
 
   // Render collision walls
   // ...
@@ -77,6 +76,10 @@ export function startBoatGame(dataForHUD, userSettings) {
     if (userSettings.cameraRotation == "on") {
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.5;
+    }
+
+    if (userSettings.graphicQuality == "normal" && dataForHUD.gameStarted) {
+      if (!terrain.forrestGenerated) terrain.genereteForest();
     }
 
     controls.update();
