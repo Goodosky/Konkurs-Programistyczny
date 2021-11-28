@@ -74,7 +74,7 @@ export function startBoatGame(dataForHUD, userSettings) {
     }
 
     // Generate forrest if it is needed
-    if (userSettings.graphicQuality == "normal" && dataForHUD.gameStarted && !terrain.forrestGenerate) {
+    if (userSettings.graphicQuality == "normal" && dataForHUD.gameStarted && !terrain.forrestGenerated) {
       terrain.genereteForest();
     }
 
