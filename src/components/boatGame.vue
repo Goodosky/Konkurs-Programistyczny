@@ -14,11 +14,19 @@
         <div class="z-10 text-center" v-if="!dataForHUD.gameStarted">
           <h1 class="text-5xl mb-8">Witaj!</h1>
 
-          <div class="flex justify-center items-center mb-8">
-            <h2 class="mr-5">Ustawienia Graficzne:</h2>
+          <div class="flex justify-center items-center mb-5">
+            <h2 class="mr-5">Jakoć grafiki:</h2>
             <select class="text-balck" v-model="userSettings.graphicQuality">
               <option value="low">niskie</option>
               <option selected value="normal">normalne</option>
+            </select>
+          </div>
+
+          <div class="flex justify-center items-center mb-5">
+            <h2 class="mr-5">Autorotacja kamery:</h2>
+            <select class="text-balck" v-model="userSettings.cameraRotation">
+              <option value="off">Wyłączona</option>
+              <option selected value="on">Włączona</option>
             </select>
           </div>
 
@@ -27,7 +35,7 @@
               startBoatGame(dataForHUD, userSettings);
               dataForHUD.gameStarted = true;
             "
-            class="bg-cdark px-8 py-3 rounded-lg transition-colors duration-500 hover:bg-cgreen"
+            class="bg-cdark mt-8 px-8 py-3 rounded-lg transition-colors duration-500 hover:bg-cgreen"
           >
             Rozpocznij grę!
           </button>
@@ -55,6 +63,7 @@ export default {
 
     const userSettings = reactive({
       graphicQuality: "normal", // normal or low
+      cameraRotation: "on", // on or off
     });
 
     function restartGame() {

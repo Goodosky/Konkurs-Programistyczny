@@ -28,7 +28,7 @@ export function startBoatGame(dataForHUD, userSettings) {
 
   // Camera
   const camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 1000);
-  camera.position.set(0, 1, 20);
+  camera.position.set(-24, 9.5, 0);
 
   const controls = new OrbitControls(camera, canvas);
   controls.target.set(0, 0, 0);
@@ -78,11 +78,16 @@ export function startBoatGame(dataForHUD, userSettings) {
 
   // Animate
   function animate() {
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    if (userSettings.cameraRotation == "on") {
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.5;
+    }
 
     controls.update();
     stats.update();
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 
     // Skip animations if the boat hasn't loaded yet
     if (!boat._modelLoaded) return;
