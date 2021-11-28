@@ -15,9 +15,8 @@ export class GameLogic {
     // Update timers
     if (this.data.timeToStart >= 0) {
       this.data.timeToStart -= timeDelta;
-    } else if (this.data.remainingTime < timeDelta) {
-      this.clock.stop;
-      this.data.remainingTime = 0;
-    } else this.data.remainingTime -= timeDelta;
+    } else if (this.data.remainingTime > 0) {
+      this.data.remainingTime -= timeDelta;
+    }
   }
 }
